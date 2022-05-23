@@ -11,3 +11,4 @@ set -x
 ${PREFIX}autoflake --in-place --recursive $SOURCE_FILES
 ${PREFIX}isort --project=faust $SOURCE_FILES
 ${PREFIX}black $SOURCE_FILES
+${PREFIX}pylint --disable all --enable spelling --spelling-dict en_US $SOURCE_FILES
