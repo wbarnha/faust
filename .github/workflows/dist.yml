@@ -9,7 +9,7 @@ on:
       - 'test-upload-workflow'
 
 jobs:
-  build_wheels:
+  build_wheels_macos:
     name: 'Build wheels for macOS'
     runs-on: macos-11
 
@@ -20,13 +20,12 @@ jobs:
         uses: pypa/cibuildwheel@v2.8.1
         env:
           CIBW_ARCHS_MACOS: x86_64 arm64
-          CIBW_PLATFORM: macos
           CIBW_BUILD: 'cp3*'
 
       - uses: actions/upload-artifact@v3
         name: 'Upload build artifacts'
         with:
-          path: 'dist/*.whl'
+          path: ./wheelhouse/*.whl
 
   build_sdist:
     name: 'Build source distribution'
@@ -52,7 +51,7 @@ jobs:
 
   upload_pypi:
     name: 'Upload packages'
-    needs: ['build_wheels', 'build_sdist']
+    needs: ['build_wheels_macos', 'build_sdist']
     runs-on: 'ubuntu-latest'
     if: github.event_name == 'release' && github.event.action == 'created'
     steps:
