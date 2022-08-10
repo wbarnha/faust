@@ -6,7 +6,7 @@ on:
   release:
     types: [created]
     branches:
-      - 'master'
+      - 'test-upload-workflow'
 
 jobs:
   build_sdist:
