@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Glossary &#8212; Faust 0.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="prev" title="Authors" href="authors.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="glossary">
+<span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">¶</a></h1>
+<dl class="glossary">
+<dt id="term-acked">acked<a class="headerlink" href="#term-acked" title="Permalink to this term">¶</a></dt><dt id="term-acking">acking<a class="headerlink" href="#term-acking" title="Permalink to this term">¶</a></dt><dt id="term-acknowledged">acknowledged<a class="headerlink" href="#term-acknowledged" title="Permalink to this term">¶</a></dt><dd><p>Acknowledgment marks a message as fully processed.
+It’s a signal that the program does not want to see the message again.
+Faust advances the offset by committing after a message is acknowledged.</p>
+</dd>
+<dt id="term-agent">agent<a class="headerlink" href="#term-agent" title="Permalink to this term">¶</a></dt><dd><p>An async function that iterates over a stream.
+Since streams are infinite the agent will usually not end unless
+the program is shut down.</p>
+</dd>
+<dt id="term-codec">codec<a class="headerlink" href="#term-codec" title="Permalink to this term">¶</a></dt><dd><p>A codec encodes/decodes data to some format or encoding.
+Examples of codecs include Base64 encoding, JSON serialization,
+pickle serialization, text encoding conversion, and more.</p>
+</dd>
+<dt id="term-concurrent">concurrent<a class="headerlink" href="#term-concurrent" title="Permalink to this term">¶</a></dt><dt id="term-concurrency">concurrency<a class="headerlink" href="#term-concurrency" title="Permalink to this term">¶</a></dt><dd><p>A concurrent process can deal with many things at once, but not
+necessarily execute them in <a class="reference internal" href="#term-parallel"><span class="xref std std-term">parallel</span></a>.  For example a web
+crawler may have to fetch thousands of web pages, and can work on them
+concurrently.</p>
+<p>This is distinct from <a class="reference internal" href="#term-parallelism"><span class="xref std std-term">parallelism</span></a> in that the process
+will switch between fetching web pages, but not actually process
+any of them at the same time.</p>
+</dd>
+<dt id="term-consumer">consumer<a class="headerlink" href="#term-consumer" title="Permalink to this term">¶</a></dt><dd><p>A process that receives messages from a broker, or a process
+that is actively reading from a topic/channel.</p>
+</dd>
+<dt id="term-event">event<a class="headerlink" href="#term-event" title="Permalink to this term">¶</a></dt><dd><p>A happening in a system, or in the case of a stream, a single record
+having a key/value pair, and a reference to the original message
+object.</p>
+</dd>
+<dt id="term-idempotence">idempotence<a class="headerlink" href="#term-idempotence" title="Permalink to this term">¶</a></dt><dt id="term-idempotent">idempotent<a class="headerlink" href="#term-idempotent" title="Permalink to this term">¶</a></dt><dt id="term-idempotency">idempotency<a class="headerlink" href="#term-idempotency" title="Permalink to this term">¶</a></dt><dd><p>Idempotence is a mathematical property that describes a function that
+can be called multiple times without changing the result.
+Practically it means that a function can be repeated many times without
+unintended effects, but not necessarily side-effect free in the pure
+sense (compare to <a class="reference internal" href="#term-nullipotent"><span class="xref std std-term">nullipotent</span></a>).</p>
+<p>Further reading: <a class="reference external" href="https://en.wikipedia.org/wiki/Idempotent">https://en.wikipedia.org/wiki/Idempotent</a></p>
+</dd>
+<dt id="term-message">message<a class="headerlink" href="#term-message" title="Permalink to this term">¶</a></dt><dd><p>The unit of data published or received from the
+message <a class="reference internal" href="#term-transport"><span class="xref std std-term">transport</span></a>.  A message has a key and a value.</p>
+</dd>
+<dt id="term-nullipotent">nullipotent<a class="headerlink" href="#term-nullipotent" title="Permalink to this term">¶</a></dt><dt id="term-nullipotence">nullipotence<a class="headerlink" href="#term-nullipotence" title="Permalink to this term">¶</a></dt><dt id="term-nullipotency">nullipotency<a class="headerlink" href="#term-nullipotency" title="Permalink to this term">¶</a></dt><dd><p>describes a function that’ll have the same effect, and give the same
+result, even if called zero or multiple times (side-effect free).
+A stronger version of <a class="reference internal" href="#term-idempotent"><span class="xref std std-term">idempotent</span></a>.</p>
+</dd>
+<dt id="term-parallel">parallel<a class="headerlink" href="#term-parallel" title="Permalink to this term">¶</a></dt><dt id="term-parallelism">parallelism<a class="headerlink" href="#term-parallelism" title="Permalink to this term">¶</a></dt><dd><p>A parallel process can execute many things at the same time,
+which will usually require running on multiple CPU cores.</p>
+<p>In contrast the term <a class="reference internal" href="#term-concurrency"><span class="xref std std-term">concurrency</span></a> refers to something
+that is seemingly parallel, but does not actually execute at the same
+time.</p>
+</dd>
+<dt id="term-publisher">publisher<a class="headerlink" href="#term-publisher" title="Permalink to this term">¶</a></dt><dd><p>A process sending messages, or a process publishing data to a topic.</p>
+</dd>
+<dt id="term-reentrant">reentrant<a class="headerlink" href="#term-reentrant" title="Permalink to this term">¶</a></dt><dt id="term-reentrancy">reentrancy<a class="headerlink" href="#term-reentrancy" title="Permalink to this term">¶</a></dt><dd><p>describes a function that can be interrupted in the middle of
+execution (e.g., by hardware interrupt or signal), and then safely
+called again later. Reentrancy isn’t the same as
+<a class="reference internal" href="#term-idempotent"><span class="xref std std-term">idempotence</span></a> as the return value doesn’t have to
+be the same given the same inputs, and a reentrant function may have
+side effects as long as it can be interrupted;  An idempotent function
+is always reentrant, but the reverse may not be true.</p>
+</dd>
+<dt id="term-sensor">sensor<a class="headerlink" href="#term-sensor" title="Permalink to this term">¶</a></dt><dd><p>A sensor records information about events happening in a running
+Faust application.</p>
+</dd>
+<dt id="term-serializer">serializer<a class="headerlink" href="#term-serializer" title="Permalink to this term">¶</a></dt><dd><p>A serializer is a <a class="reference internal" href="#term-codec"><span class="xref std std-term">codec</span></a>, responsible for serializing
+keys and values in messages sent over the network.</p>
+</dd>
+<dt id="term-task">task<a class="headerlink" href="#term-task" title="Permalink to this term">¶</a></dt><dd><p>A task is the unit of <a class="reference internal" href="#term-concurrency"><span class="xref std std-term">concurrency</span></a> in an <a class="reference external" href="https://docs.python.org/dev/library/asyncio.html#module-asyncio" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asyncio</span></code></a> program.</p>
+</dd>
+<dt id="term-thread-safe">thread safe<a class="headerlink" href="#term-thread-safe" title="Permalink to this term">¶</a></dt><dd><p>A function or process that is thread safe means multiple POSIX
+threads can execute it in parallel without race conditions or deadlock
+situations.</p>
+</dd>
+<dt id="term-topic">topic<a class="headerlink" href="#term-topic" title="Permalink to this term">¶</a></dt><dd><p>Consumers subscribe to topics of interest, and producers send messages
+to consumers via the topic.</p>
+</dd>
+<dt id="term-transport">transport<a class="headerlink" href="#term-transport" title="Permalink to this term">¶</a></dt><dd><p>A communication mechanism used to send and receive messages, for
+example Kafka.</p>
+</dd>
+</dl>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Faust</a></h1>
+
+
+
+<p class="blurb">A library for building streaming applications in Python.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=robinhood&repo=faust&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/robinhood/faust">
+    <img
+        alt="https://secure.travis-ci.org/robinhood/faust.svg?branch=master"
+        src="https://secure.travis-ci.org/robinhood/faust.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="copyright.html">Copyright</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introducing Faust</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="playbooks/index.html">Playbooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="userguide/index.html">User Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions (FAQ)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developerguide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history/index.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="authors.html" title="previous chapter">Authors</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017-2020, 2021-2022 Community, Robinhood Markets, Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/glossary.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/robinhood/faust" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

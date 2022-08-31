@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>faust.types.settings.sections &#8212; Faust 0.2.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../../copyright.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for faust.types.settings.sections</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;SectionType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Section&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SECTIONS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Agent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Broker&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Common&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Extension&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Producer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RPC&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Serialization&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Stream&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Table&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Topic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WebServer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Worker&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">IT</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;IT&quot;</span><span class="p">)</span>  <span class="c1"># Input type.</span>
+<span class="n">OT</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;OT&quot;</span><span class="p">)</span>  <span class="c1"># Output type.</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.params</span> <span class="k">import</span> <span class="n">Param</span> <span class="k">as</span> <span class="n">_Param</span>
+<span class="k">else</span><span class="p">:</span>
+
+    <span class="k">class</span> <span class="nc">_Param</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">IT</span><span class="p">,</span> <span class="n">OT</span><span class="p">]):</span>
+        <span class="o">...</span>  <span class="c1"># noqa: E701</span>
+
+
+<div class="viewcode-block" id="SectionType"><a class="viewcode-back" href="../../../../reference/faust.types.settings.sections.html#faust.types.settings.sections.SectionType">[docs]</a><span class="k">class</span> <span class="nc">SectionType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">AGENT</span> <span class="o">=</span> <span class="s2">&quot;AGENT&quot;</span>
+    <span class="n">BROKER</span> <span class="o">=</span> <span class="s2">&quot;BROKER&quot;</span>
+    <span class="n">COMMON</span> <span class="o">=</span> <span class="s2">&quot;COMMON&quot;</span>
+    <span class="n">CONSUMER</span> <span class="o">=</span> <span class="s2">&quot;CONSUMER&quot;</span>
+    <span class="n">EXTENSION</span> <span class="o">=</span> <span class="s2">&quot;EXTENSION&quot;</span>
+    <span class="n">PRODUCER</span> <span class="o">=</span> <span class="s2">&quot;PRODUCER&quot;</span>
+    <span class="n">RPC</span> <span class="o">=</span> <span class="s2">&quot;RPC&quot;</span>
+    <span class="n">SERIALIZATION</span> <span class="o">=</span> <span class="s2">&quot;SERIALIZATION&quot;</span>
+    <span class="n">STREAM</span> <span class="o">=</span> <span class="s2">&quot;STREAM&quot;</span>
+    <span class="n">TABLE</span> <span class="o">=</span> <span class="s2">&quot;TABLE&quot;</span>
+    <span class="n">TOPIC</span> <span class="o">=</span> <span class="s2">&quot;TOPIC&quot;</span>
+    <span class="n">WEB_SERVER</span> <span class="o">=</span> <span class="s2">&quot;WEB_SERVER&quot;</span>
+    <span class="n">WORKER</span> <span class="o">=</span> <span class="s2">&quot;WORKER&quot;</span></div>
+
+
+<div class="viewcode-block" id="Section"><a class="viewcode-back" href="../../../../reference/faust.types.settings.sections.html#faust.types.settings.sections.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Configuration section.&quot;&quot;&quot;</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="n">SectionType</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">refid</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">SectionType</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">refid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refid</span> <span class="o">=</span> <span class="n">refid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>
+        <span class="n">SECTIONS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Section.setting"><a class="viewcode-back" href="../../../../reference/faust.types.settings.sections.html#faust.types.settings.sections.Section.setting">[docs]</a>    <span class="k">def</span> <span class="nf">setting</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">_Param</span><span class="p">[</span><span class="n">IT</span><span class="p">,</span> <span class="n">OT</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">OT</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Decorate to define new setting in this section.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OT</span><span class="p">:</span>
+            <span class="n">setting</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">fun</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">section</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="n">fun</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">OT</span><span class="p">,</span> <span class="n">setting</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inner</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;{type(self).__name__}: </span><span class="si">{self.type}</span><span class="s2">&gt;&quot;</span></div>
+
+
+<span class="n">SECTIONS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SectionType</span><span class="p">,</span> <span class="n">Section</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">Common</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">COMMON</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Commonly Used Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-common&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Serialization</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">SERIALIZATION</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Serialization Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-serialization&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Topic</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">TOPIC</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Topic Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-topic&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Broker</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">BROKER</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Broker Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-broker&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Consumer</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">CONSUMER</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Consumer Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-consumer&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Producer</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">PRODUCER</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Producer Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-producer&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Table</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">TABLE</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Table Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-table&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Stream</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">STREAM</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Stream Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;setting-stream&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Worker</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">WORKER</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Worker Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-worker&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">WebServer</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">WEB_SERVER</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Web Server Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;setting-web&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Agent</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">AGENT</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Agent Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-agent&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">RPC</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">RPC</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agent RPC Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-rpc&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">Extension</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">SectionType</span><span class="o">.</span><span class="n">EXTENSION</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Extension Settings&quot;</span><span class="p">,</span>
+    <span class="n">refid</span><span class="o">=</span><span class="s2">&quot;settings-extending&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../../../../index.html">Faust</a></h1>
+
+
+
+<p class="blurb">A library for building streaming applications in Python.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=robinhood&repo=faust&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/robinhood/faust">
+    <img
+        alt="https://secure.travis-ci.org/robinhood/faust.svg?branch=master"
+        src="https://secure.travis-ci.org/robinhood/faust.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../copyright.html">Copyright</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introducing Faust</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../playbooks/index.html">Playbooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../userguide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq.html">Frequently Asked Questions (FAQ)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developerguide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../history/index.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017-2020, 2021-2022 Community, Robinhood Markets, Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/robinhood/faust" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
