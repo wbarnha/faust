@@ -1,2 +1,2 @@
-aioeventlet~=0.5.1
+aioeventlet~=0.5.2
 dnspython
