@@ -181,7 +181,7 @@ with open("README.md") as readme_file:
 
 def do_setup(**kwargs):
     setup(
-        name="faust-streaming",
+        name="wbarnha-faust-streaming",
         use_scm_version=True,
         setup_requires=["setuptools_scm"],
         description=meta["doc"],
