@@ -193,7 +193,9 @@ class ConfluentConsumerThread(ConsumerThread):
         )
 
     def close(self) -> None:
-        ...
+        self._consumer.close()
+        # You are not allowed to call poll() after close()
+        self._consumer = None
 
     async def subscribe(self, topics: Iterable[str]) -> None:
         # XXX pattern does not work :/
@@ -209,15 +211,30 @@ class ConfluentConsumerThread(ConsumerThread):
             self._ensure_consumer().poll(timeout=1)
 
     def _on_assign(self, consumer: _Consumer, assigned: List[_TopicPartition]) -> None:
+        """"
+        Create a task to call on_partitions_assigned, but don't await it.
+        This is because the on_assign callback is called from the poll thread,
+        and we don't want to block the poll thread.
+        """
         self._assigned = True
         self.thread_loop.create_task(
             self.on_partitions_assigned({TP(tp.topic, tp.partition) for tp in assigned})
         )
 
     def _on_revoke(self, consumer: _Consumer, revoked: List[_TopicPartition]) -> None:
+        """
+        Create a task to call on_partitions_revoked, but don't await it.
+        This is because the on_revoke callback is called from the poll thread,
+        and we don't want to block the poll thread.
+        @param consumer:
+        @param revoked:
+        @return:
+        """
+        self._assigned = False
         self.thread_loop.create_task(
             self.on_partitions_revoked({TP(tp.topic, tp.partition) for tp in revoked})
         )
+
 
     async def seek_to_committed(self) -> Mapping[TP, int]:
         return await self.call_thread(self._seek_to_committed)
@@ -238,6 +255,11 @@ class ConfluentConsumerThread(ConsumerThread):
         return {TP(tp.topic, tp.partition): tp.offset for tp in committed}
 
     async def commit(self, tps: Mapping[TP, int]) -> bool:
+        """
+        Commit offsets for the given topic partitions.
+        @param tps:
+        @return:
+        """
         self.call_thread(
             self._ensure_consumer().commit,
             offsets=[
@@ -279,8 +301,7 @@ class ConfluentConsumerThread(ConsumerThread):
         return hw
 
     def topic_partitions(self, topic: str) -> Optional[int]:
-        # XXX NotImplemented
-        return None
+        return self._ensure_consumer().get_partition_count(topic)
 
     async def earliest_offsets(self, *partitions: TP) -> MutableMapping[TP, int]:
         if not partitions:
@@ -345,12 +366,24 @@ class ConfluentConsumerThread(ConsumerThread):
     def key_partition(
         self, topic: str, key: Optional[bytes], partition: int = None
     ) -> Optional[int]:
+        """
+        Calculate the partition number for a given key.
+        @param topic:
+        @param key:
+        @param partition:
+        @return:
+        """
         metadata = self._consumer.list_topics(topic)
         partition_count = len(metadata.topics[topic]['partitions'])
-
+        if partition is not None:
+            if partition >= partition_count:
+                raise ValueError(f"Partition {partition} out of range")
+        if key is None:
+            return None
         # Calculate the partition number based on the key hash
         key_bytes = str(key).encode('utf-8')
         return abs(hash(key_bytes)) % partition_count
+
 
 
 class ProducerProduceFuture(asyncio.Future):
@@ -358,6 +391,12 @@ class ProducerProduceFuture(asyncio.Future):
         if err:
             # XXX Not sure what err' is here, hopefully it's an exception
             # object and not a string [ask].
+
+            # XXX This is a hack to get the error message from the
+            # underlying C library.  It's not documented, but it's
+            # the only way to get the error message.
+            err = err.args[0]
+
             self.set_exception(err)
         else:
             metadata: RecordMetadata = self.message_to_metadata(msg)
@@ -489,18 +528,14 @@ class Producer(base.Producer):
         deleting: bool = None,
         ensure_created: bool = False,
     ) -> None:
-        """Create topic on broker."""
-        return  # XXX
-        _retention = int(want_seconds(retention) * 1000.0) if retention else None
-        await cast(Transport, self.transport)._create_topic(
-            self,
-            self._producer.client,
+        """Create topic on broker using Confluent Kafka."""
+        self._admin.create_topic(
             topic,
             partitions,
             replication,
             config=config,
             timeout=int(want_seconds(timeout) * 1000.0),
-            retention=_retention,
+            retention=retention,
             compacting=compacting,
             deleting=deleting,
             ensure_created=ensure_created,
